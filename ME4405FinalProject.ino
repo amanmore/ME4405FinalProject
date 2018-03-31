@@ -155,3 +155,8 @@ long SonarSensor(int trigPin, int echoPin) { // measure sensor value
   long distance = (duration / 2) / 29.1;
   return distance;
 }
+
+void moveMotor(int pin1, int pin2, int pin3, int angle) {
+  
+}
+
