@@ -23,10 +23,8 @@ int encRight = 3;//3.2
 int encLeft = 4;//3.3
 int lMotor1 = 37;//5.6
 int lMotor2 = 36;//6.6
-int lMotor3 = 35;//6.7
 int rMotor1 = 32;//3.5
 int rMotor2 = 11;//3.6
-int rMotor3 = 31;//3.7
 
 //definibg variables
 int lineFval; //Front Line Sensor Value
@@ -44,12 +42,71 @@ int inFront = 2; // [choose this one] distance at which object is considered imm
 int alignmentDiff = 5; // [choose this one] max allowable difference between 2 sensors
 
 int encRval; // Right Encoder ticks
-int encRdeg; // " degrees
 int encRdir; // " direction
 
 int encLval; // Left encoder ticks
-int encLdeg; // " degrees
 int encLdir; // " direction
+
+bool hasMoved = false;
+bool rMoved = false;
+bool lMoved = false;
+int moveLPin;
+int moveRPin;
+
+long SonarSensor(int trigPin, int echoPin) { // measure sensor value
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+  long duration = pulseIn(echoPin, HIGH, 3000);
+  long distance = (duration / 2) / 29.1;
+  if(distance>=1){
+    return distance;    
+  }
+}
+
+void moveMotors(int leftclicks, int rightclicks, int speedL, int speedR) {
+  if (leftclicks<0) {
+    leftclicks = abs(leftclicks);
+    encLdir = 0;
+    moveLPin = lMotor1;
+  } else if (leftclicks>=0) {
+    leftclicks = abs(leftclicks);
+    encLdir = 1;
+    moveLPin = lMotor2;
+  }
+  if (rightclicks<0) {
+    rightclicks = abs(rightclicks);
+    encRdir = 0;
+    moveRPin = rMotor1;
+  } else if (rightclicks>=0) {
+    rightclicks = abs(rightclicks);
+    encRdir = 1;
+    moveRPin = rMotor2;
+  }
+  hasMoved = false;
+  rMoved = false;
+  lMoved = false;
+  while(hasMoved==false) {
+    if (rightclicks > encRval) {
+      analogWrite(moveRPin, speedR);
+    } else if (rightclicks <= encRval) {
+      analogWrite(moveRPin, 0);
+      rMoved = true;
+    }
+    if (leftclicks > encLval) {
+      analogWrite(moveLPin, speedL);
+    } else if (leftclicks <= encLval) {
+      analogWrite(moveLPin, 0);
+      lMoved = true;
+    }
+    //update encoder values
+    if (lMoved && rMoved) {
+      hasMoved = true;
+    }
+  }
+}
 
 void setup() {
   // UART at 9600
@@ -143,20 +200,5 @@ void loop() {
     Serial.println("Damn, Daniel. Back at it again with the horrible positioning");
   }
 
-}
-
-long SonarSensor(int trigPin, int echoPin) { // measure sensor value
-  digitalWrite(trigPin, LOW);
-  delayMicroseconds(2);
-  digitalWrite(trigPin, HIGH);
-  delayMicroseconds(10);
-  digitalWrite(trigPin, LOW);
-  long duration = pulseIn(echoPin, HIGH);
-  long distance = (duration / 2) / 29.1;
-  return distance;
-}
-
-void moveMotor(int pin1, int pin2, int pin3, int angle) {
-  
 }
 
