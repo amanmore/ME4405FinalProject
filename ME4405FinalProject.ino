@@ -8,25 +8,37 @@
 //defining pins
 int pushButton1 = PUSH1;
 int pushButton2 = PUSH2;
-int led1 = LED1;
+
+int led1 = 78;
 int redled = RED_LED;
 int greenled = GREEN_LED;
 int blueled = BLUE_LED;
+
 int lineFront = 29;//5.4
 int lineBack = 30;//5.4
-int ultraPulse = 34;//2.3
+
+int ultraLLPulse = 34;//2.3
 int ultraLL = 38;//2.4
+
+int ultraLCPulse = 31;//3.7
 int ultraLC = 19;//2.5
+
+int ultraRLPulse = 35;//6.7
 int ultraRC = 39;//2.6
+
+int ultraRRPulse = 28;//4.7
 int ultraRR = 40;//2.7
+
 int encRight = 3;//3.2
 int encLeft = 4;//3.3
+
 int lMotor1 = 37;//5.6
 int lMotor2 = 36;//6.6
+
 int rMotor1 = 32;//3.5
 int rMotor2 = 11;//3.6
 
-//definibg variables
+//defining variables
 int lineFval; //Front Line Sensor Value
 int lineBval; //Back "
 int lineBlack = 256; // [choose this one] highest value that can be considered black
@@ -118,7 +130,10 @@ void setup() {
   pinMode(redled, OUTPUT);
   pinMode(greenled, OUTPUT);
   pinMode(blueled, OUTPUT);
-  pinMode(ultraPulse, OUTPUT);
+  pinMode(ultraLLPulse, OUTPUT);
+  pinMode(ultraLCPulse, OUTPUT);
+  pinMode(ultraRCPulse, OUTPUT);
+  pinMode(ultraRRPulse, OUTPUT);
   pinMode(ultraLL, INPUT);
   pinMode(ultraLC, INPUT);
   pinMode(ultraRC, INPUT);
